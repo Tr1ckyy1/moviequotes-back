@@ -149,7 +149,7 @@ test('reset password should return error if invalid token is being sent', functi
 		'password_confirmation' => 'newpassword123',
 	]);
 
-	$response->assertStatus(403);
+	$response->assertStatus(400);
 
 	$updatedUser = User::find($user->id);
 
@@ -173,7 +173,7 @@ test('reset password should return error for expired token', function () {
 		'password_confirmation' => 'newpassword123',
 	]);
 
-	$response->assertStatus(403);
+	$response->assertStatus(400);
 
 	$updatedUser = User::find($user->id);
 	$this->assertTrue(Hash::check('password123', $updatedUser->password));

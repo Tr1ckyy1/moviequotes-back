@@ -20,7 +20,7 @@ class GoogleAuthController extends Controller
 		$googleUser = Socialite::driver('google')->stateless()->user();
 		$emailExists = User::where('email', $googleUser->email)->first();
 		if ($emailExists && !$emailExists->google_id) {
-			return response()->json(['error' => __('email-verification.gmail_attempt_with_normal_email_error_message')], 403);
+			return response()->json(['error' => __('email-verification.gmail_attempt_with_normal_email_error_message')], 422);
 		}
 
 		$user = User::updateOrCreate(

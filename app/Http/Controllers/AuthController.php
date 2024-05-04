@@ -90,7 +90,7 @@ class AuthController extends Controller
 		);
 
 		if ($status === Password::INVALID_TOKEN) {
-			return response()->json(['expired' => true], 403);
+			return response()->json(['expired' => true], 400);
 		}
 	}
 
@@ -104,7 +104,7 @@ class AuthController extends Controller
 		$validToken = Password::tokenExists($user, request()->token);
 
 		if (!$validToken) {
-			return response()->json(['expired' => true], 403);
+			return response()->json(['expired' => true], 400);
 		}
 	}
 }

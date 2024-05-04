@@ -14,7 +14,7 @@ class VerificationController extends Controller
 
 		if ($user->hasVerifiedEmail()) {
 			return response()->json([
-				'already_verified' => true], 403);
+				'already_verified' => true], 400);
 		} else {
 			$user->markEmailAsVerified();
 		}
@@ -33,7 +33,7 @@ class VerificationController extends Controller
 
 		if ($user->hasVerifiedEmail()) {
 			return response()->json([
-				'already_verified' => true], 403);
+				'already_verified' => true], 400);
 		}
 	}
 }

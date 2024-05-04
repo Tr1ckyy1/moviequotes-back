@@ -22,6 +22,6 @@ return Application::configure(basePath: dirname(__DIR__))
 	})
 	->withExceptions(function (Exceptions $exceptions) {
 		$exceptions->render(function (InvalidSignatureException $e) {
-			return response()->json(['expired' => true], 403);
+			return response()->json(['expired' => true], 400);
 		});
 	})->create();
