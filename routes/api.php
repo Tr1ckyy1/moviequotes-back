@@ -3,11 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\VerificationController;
-use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-	return $request->user();
+Route::get('/user', function () {
+	return new UserResource(User::find(auth()->id()));
 })->middleware('auth:sanctum');
 
 Route::controller(AuthController::class)->group(function () {

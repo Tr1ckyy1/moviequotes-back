@@ -50,4 +50,10 @@ class User extends Authenticatable implements MustVerifyEmail
 	{
 		$this->notify(new ResetPasswordNotification(config('app.frontend_url') . '?token=' . $token . '&email=' . $this->email));
 	}
+
+	public function getProfileImageUrl()
+	{
+		// return $this->profile_image ? asset('storage/' . $this->profile_image) : null; will delete later
+		return $this->profile_image ?? null;
+	}
 }
