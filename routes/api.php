@@ -2,14 +2,11 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerificationController;
-use App\Http\Resources\UserResource;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function () {
-	return new UserResource(User::find(auth()->id()));
-})->middleware('auth:sanctum');
+Route::get('/user', [UserController::class, 'show'])->middleware(['auth:sanctum', 'verified'])->name('user');
 
 Route::controller(AuthController::class)->group(function () {
 	Route::post('/logout', 'logout')->middleware(['auth:sanctum', 'verified'])->name('auth.logout');

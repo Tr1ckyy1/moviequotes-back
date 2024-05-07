@@ -15,25 +15,30 @@ class GoogleAuthController extends Controller
 
 	public function callbackGoogle()
 	{
-		// profile image if gmail account has profile img
-
 		$googleUser = Socialite::driver('google')->stateless()->user();
-		$emailExists = User::where('email', $googleUser->email)->first();
-		if ($emailExists && !$emailExists->google_id) {
-			return response()->json(['error' => __('email-verification.gmail_attempt_with_normal_email_error_message')], 422);
+
+		$user = User::where('email', $googleUser->email)->first();
+
+		if ($user) {
+			if (!$user->google_id) {
+				return response()->json([
+					'error' => __('email-verification.gmail_attempt_with_normal_email_error_message'),
+				], 422);
+			}
+
+			$user->update([
+				'google_id'     => $googleUser->id,
+			]);
+		} else {
+			$user = User::create([
+				'google_id'             => $googleUser->id,
+				'username'              => $googleUser->name,
+				'email'                 => $googleUser->email,
+				'email_verified_at'     => now(),
+				'profile_image'         => $googleUser->avatar,
+			]);
 		}
 
-		$user = User::updateOrCreate(
-			[
-				'google_id' => $googleUser->id,
-			],
-			[
-				'username'                 => $googleUser->name,
-				'email'                    => $googleUser->email,
-				'email_verified_at'        => now(),
-				'profile_image'            => $googleUser->avatar,
-			]
-		);
 		auth()->login($user);
 	}
 }

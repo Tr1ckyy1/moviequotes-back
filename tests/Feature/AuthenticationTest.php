@@ -6,14 +6,14 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
-use Laravel\Socialite\Facades\Socialite;
 
 test('signup should have error if inputs are empty', function () {
 	$this->postJson(route('auth.signup'))->assertJsonValidationErrors(['username' => 'required', 'email' => 'required', 'password' =>'required', 'password_confirmation' => 'required'])->assertStatus(422);
 });
 
 test('user able to signup successfully with provided credentials', function () {
-	$this->postJson(route('auth.signup'), ['email' => 'testing@gmail.com', 'username' => 'testing', 'password'=> 'password', 'password_confirmation' => 'password'])->assertStatus(200);
+	$this->postJson(route('auth.signup'), ['username' => 'testing', 'email' => 'testing@gmail.com', 'password'=> 'password', 'password_confirmation' => 'password'])->assertStatus(200);
+	$this->assertDatabaseHas('users', ['username' => 'testing', 'email' => 'testing@gmail.com']);
 });
 
 test('input should have error if length is less than three characters', function () {
@@ -178,24 +178,3 @@ test('reset password should return error for expired token', function () {
 	$updatedUser = User::find($user->id);
 	$this->assertTrue(Hash::check('password123', $updatedUser->password));
 });
-
-// test('testing gmail', function () {
-// 	Socialite::shouldReceive('driver->stateless->user')
-// 	->andReturn((object) [
-// 		'id'    => 'fake_google_id',
-// 		'name'  => 'John Doe',
-// 		'email' => 'johndoe@example.com',
-// 		'token' => 'fake_access_token',
-// 	]);
-
-// 	$response = $this->getJson(route('google_callback'));
-
-// 	$response->assertStatus(200)
-// 			 ->assertJsonStructure(['token']);
-
-// 	$this->assertDatabaseHas('users', [
-// 		'google_id' => 'fake_google_id',
-// 		'email'     => 'johndoe@example.com',
-// 	]);
-// 	$this->assertAuthenticated();
-// });
