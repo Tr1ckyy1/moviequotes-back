@@ -25,6 +25,7 @@ return [
 			'required'          => 'Password confirmation is required',
 			'password_mismatch' => 'Passwords do not match',
 		],
-		'token' =>  ['required' => 'Token is required'],
+		'token' => ['required' => 'Token is required'],
+		'image' => 'File has to be an image',
 	],
 ];
