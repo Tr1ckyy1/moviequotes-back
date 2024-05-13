@@ -57,7 +57,13 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
 
 	public function getProfileImageUrl()
 	{
-		return $this->profile_image ?? null;
+		if ($this->getFirstMedia('user_images')) {
+			return $this->getFirstMedia('user_images')->getUrl();
+		}
+		if ($this->profile_image) {
+			return $this->profile_image;
+		}
+		return null;
 	}
 
 	public function registerMediaCollections(): void
