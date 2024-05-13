@@ -43,11 +43,10 @@ class UserController extends Controller
 		}
 
 		if ($request->hasFile('profile_image')) {
-			$media = $user->addMediaFromRequest('profile_image')->toMediaCollection('user_images');
-			$user->profile_image = $media->getUrl();
+			$user->addMediaFromRequest('profile_image')->toMediaCollection('user_images');
 		}
 
 		$user->save();
-		return response()->json(['password_message' => isset($credentials['password']) ? __('profile.updated_success_password') : null, 'image' => $user->profile_image ?? null, 'message' => __('profile.updated_success')]);
+		return response()->json(['password_message' => isset($credentials['password']) ? __('profile.updated_success_password') : null, 'message' => __('profile.updated_success')]);
 	}
 }
