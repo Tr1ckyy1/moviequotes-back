@@ -9,12 +9,16 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
 	use HasFactory;
 
 	use Notifiable;
+
+	use InteractsWithMedia;
 
 	/**
 	 * The attributes that are mass assignable.
@@ -53,7 +57,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
 	public function getProfileImageUrl()
 	{
-		// return $this->profile_image ? asset('storage/' . $this->profile_image) : null; will delete later
 		return $this->profile_image ?? null;
+	}
+
+	public function registerMediaCollections(): void
+	{
+		$this->addMediaCollection('user_images')
+			 ->singleFile();
 	}
 }

@@ -6,7 +6,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', [UserController::class, 'show'])->middleware(['auth:sanctum', 'verified'])->name('user');
+Route::controller(UserController::class)->group(function () {
+	Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+		Route::get('/user', 'show')->name('user.show');
+		Route::post('/update-profile', 'update')->name('user.update');
+	});
+});
 
 Route::controller(AuthController::class)->group(function () {
 	Route::post('/logout', 'logout')->middleware(['auth:sanctum', 'verified'])->name('auth.logout');
