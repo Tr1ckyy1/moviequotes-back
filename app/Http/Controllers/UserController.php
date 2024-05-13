@@ -36,21 +36,18 @@ class UserController extends Controller
 				return response()->json(['errors' => ['password' => __('email-verification.password_reset_new_password')]], 422);
 			}
 			$user->password = bcrypt($credentials['password']);
-			$user->save();
-			return response()->json(__('profile.updated_success_password'));
 		}
 
 		if (isset($credentials['username'])) {
 			$user->username = $credentials['username'];
-			$user->save();
 		}
 
 		if ($request->hasFile('profile_image')) {
 			$media = $user->addMediaFromRequest('profile_image')->toMediaCollection('user_images');
 			$user->profile_image = $media->getUrl();
-			$user->save();
-			return response()->json(['image' => $user->profile_image, 'message' => __('profile.updated_success')]);
 		}
-		return response()->json(__('profile.updated_success'));
+
+		$user->save();
+		return response()->json(['password_message' => isset($credentials['password']) ? __('profile.updated_success_password') : null, 'image' => $user->profile_image ?? null, 'message' => __('profile.updated_success')]);
 	}
 }
