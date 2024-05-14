@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(UserController::class)->group(function () {
 	Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 		Route::get('/user', 'show')->name('user.show');
-		Route::post('/update-profile', 'update')->name('user.update');
+		Route::patch('/update-profile', 'update')->name('user.update');
 	});
 });
 
