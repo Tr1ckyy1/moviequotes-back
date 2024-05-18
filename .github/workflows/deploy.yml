@@ -27,5 +27,5 @@ jobs:
             git pull
             php artisan optimize:clear
             composer install
-            php artisan migrate
+            php artisan migrate --force
           EOF

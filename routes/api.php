@@ -1,15 +1,26 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\MovieController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(UserController::class)->group(function () {
-	Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+	Route::controller(UserController::class)->group(function () {
 		Route::get('/user', 'show')->name('user.show');
 		Route::patch('/update-profile', 'update')->name('user.update');
+	});
+
+	Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
+	Route::controller(MovieController::class)->group(function () {
+		Route::get('/get-movies', 'index')->name('movie.index');
+		Route::get('/movies/{movie}', 'show')->name('movie.show');
+		Route::post('/add-movie', 'store')->name('movie.store');
+		Route::patch('/edit-movie/{movie}', 'update')->name('movie.update');
+		Route::delete('delete-movie/{movie}', 'destroy')->name('movie.destroy');
 	});
 });
 

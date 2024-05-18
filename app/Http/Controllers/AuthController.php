@@ -57,6 +57,11 @@ class AuthController extends Controller
 
 	public function forgotPassword(StoreForgotPassword $request)
 	{
+		$user = User::where('email', $request->email)->first();
+
+		if ($user->google_id) {
+			return response()->json(['errors' => ['email' => __('profile.gmail_password_error')]], 403);
+		}
 		Password::sendResetLink(
 			$request->only('email')
 		);

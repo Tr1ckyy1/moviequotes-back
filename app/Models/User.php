@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,6 +46,26 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
 			'email_verified_at' => 'datetime',
 			'password'          => 'hashed',
 		];
+	}
+
+	public function quotes()
+	{
+		return $this->hasMany(Quote::class);
+	}
+
+	public function likes()
+	{
+		return $this->hasMany(Like::class);
+	}
+
+	public function comments()
+	{
+		return $this->hasMany(Comment::class);
+	}
+
+	public function movies()
+	{
+		return $this->hasMany(Movie::class);
 	}
 
 	public function sendPasswordResetNotification($token): void
