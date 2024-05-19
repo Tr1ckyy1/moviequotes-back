@@ -46,6 +46,10 @@ return [
 		'description' => [
 			'required' => 'Description is required',
 		],
+		'quote' => [
+			'required' => 'Quote is required',
+			'movie' => 'Please choose a movie'
+		],
 		'image' => [
 			'required' => 'Image is required',
 		],

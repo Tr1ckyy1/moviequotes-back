@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 		Route::post('/add-movie', 'store')->name('movie.store');
 		Route::patch('/edit-movie/{movie}', 'update')->name('movie.update');
 		Route::delete('delete-movie/{movie}', 'destroy')->name('movie.destroy');
+	});
+
+	Route::controller(QuoteController::class)->group(function () {
+		Route::get('/get-quotes', 'index')->name('quotes.index');
+		Route::post('/add-quote', 'store')->name('quote.store');
+		Route::post('/update-like/{quote}', 'updateLike')->name('quote.likes');
+		Route::post('/add-comment/{quote}', 'addComment')->name('quote.comments');
 	});
 });
 

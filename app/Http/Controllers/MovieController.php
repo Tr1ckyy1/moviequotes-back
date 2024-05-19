@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMovieRequest;
+use App\Http\Requests\StoreMovieUpdateRequest;
 use App\Http\Resources\MovieIndexResource;
 use App\Http\Resources\MovieShowResource;
 use App\Models\Movie;
@@ -20,7 +21,7 @@ class MovieController extends Controller
 			return response()->json(null, 403);
 		}
 
-		return new MovieShowResource($movie->load('quotes', 'categories'));
+		return new MovieShowResource($movie->load('quotes', 'categories', 'quotes.likes', 'quotes.comments'));
 	}
 
 	public function store(StoreMovieRequest $request)
@@ -42,10 +43,14 @@ class MovieController extends Controller
 		$movie->save();
 	}
 
-	public function update(StoreMovieRequest $request, Movie $movie)
+	public function update(StoreMovieUpdateRequest $request, Movie $movie)
 	{
 		if ($movie->user_id !== auth()->id()) {
 			return response()->json('Unauthorized', 403);
+		}
+
+		if (!$request->has('categories')) {
+			return response()->json(['errors' => ['categories' => __('validation.movie.categories')]], 422);
 		}
 
 		$movie->update($request->validated());
