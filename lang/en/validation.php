@@ -25,7 +25,33 @@ return [
 			'required'          => 'Password confirmation is required',
 			'password_mismatch' => 'Passwords do not match',
 		],
-		'token' => ['required' => 'Token is required'],
-		'image' => 'File has to be an image',
+		'token'   => ['required' => 'Token is required'],
+		'image'   => 'File has to be an image',
+	],
+	'regex_en'=> 'English letters only',
+	'regex_ka'=> 'Georgian letters only',
+	'movie'   => [
+		'name' => [
+			'required' => 'Movie name is required',
+		],
+		'categories' => 'Please choose at least one category',
+		'year'       => [
+			'required' => 'Movie year is required',
+			'min'      => 'Must be at least from 1900',
+			'max'      => "Cannot exceed today's date",
+		],
+		'director' => [
+			'required' => 'Director is required',
+		],
+		'description' => [
+			'required' => 'Description is required',
+		],
+		'quote' => [
+			'required' => 'Quote is required',
+			'movie' => 'Please choose a movie'
+		],
+		'image' => [
+			'required' => 'Image is required',
+		],
 	],
 ];
