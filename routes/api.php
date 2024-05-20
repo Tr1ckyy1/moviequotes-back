@@ -26,9 +26,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
 	Route::controller(QuoteController::class)->group(function () {
 		Route::get('/get-quotes', 'index')->name('quotes.index');
+		Route::get('/get-quote/{quote}', 'show')->name('quotes.show');
 		Route::post('/add-quote', 'store')->name('quote.store');
 		Route::post('/update-like/{quote}', 'updateLike')->name('quote.likes');
 		Route::post('/add-comment/{quote}', 'addComment')->name('quote.comments');
+		Route::patch('/edit-quote/{quote}', 'update')->name('quote.update');
+		Route::delete('/delete-quote/{quote}', 'destroy')->name('quote.destroy');
 	});
 });
 

@@ -18,7 +18,7 @@ class Movie extends Model implements HasMedia
 
 	public function quotes()
 	{
-		return $this->hasMany(Quote::class);
+		return $this->hasMany(Quote::class)->latest();
 	}
 
 	public function user()
