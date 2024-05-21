@@ -9,13 +9,13 @@ class StoreMovieRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'name.en'         => ['required', 'regex:'],
-			'name.ka'         => ['required', 'regex:/^[A-Za-z0-9\s.,:;\'"`-]+$/'],
+			'name.en'         => ['required', 'regex:/^[A-Za-z0-9\s.,:;\'"`-]+$/'],
+			'name.ka'         => ['required', 'regex:/^[\x{10A0}-\x{10FF}0-9\s.,:;\'"`-]+$/u'],
 			'year'            => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
-			'director.en'     => ['required', 'regex:'],
-			'director.ka'     => ['required', 'regex:/^[A-Za-z0-9\s.,:;\'"`-]+$/'],
-			'description.en'  => ['required', 'regex:'],
-			'description.ka'  => ['required', 'regex:/^[A-Za-z0-9\s.,:;\'"`-]+$/'],
+			'director.en'     => ['required', 'regex:/^[A-Za-z0-9\s.,:;\'"`-]+$/'],
+			'director.ka'     => ['required', 'regex:/^[\x{10A0}-\x{10FF}0-9\s.,:;\'"`-]+$/u'],
+			'description.en'  => ['required', 'regex:/^[A-Za-z0-9\s.,:;\'"`-]+$/'],
+			'description.ka'  => ['required', 'regex:/^[\x{10A0}-\x{10FF}0-9\s.,:;\'"`-]+$/u'],
 			'image'           => ['required', 'image', 'max:2048'],
 		];
 	}
