@@ -7,12 +7,18 @@ use App\Http\Requests\StoreQuoteUpdateRequest;
 use App\Http\Resources\QuoteResource;
 use App\Models\Quote;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class QuoteController extends Controller
 {
-	public function index()
+	public function index(Request $request)
 	{
-		return QuoteResource::collection(Quote::with('user', 'likes', 'movie', 'comments', 'comments.user')->latest()->paginate(10));
+		$quotes = QueryBuilder::for(Quote::with('user', 'likes', 'movie', 'comments', 'comments.user')->latest())
+			->allowedFilters('quote.en')
+			->paginate(10);
+
+		return QuoteResource::collection($quotes);
+		// return QuoteResource::collection(Quote::with('user', 'likes', 'movie', 'comments', 'comments.user')->latest()->paginate(10));
 	}
 
 	public function show(Quote $quote)
