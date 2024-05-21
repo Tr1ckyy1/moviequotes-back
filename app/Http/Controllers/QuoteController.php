@@ -7,18 +7,30 @@ use App\Http\Requests\StoreQuoteUpdateRequest;
 use App\Http\Resources\QuoteResource;
 use App\Models\Quote;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class QuoteController extends Controller
 {
-	public function index(Request $request)
+	public function index()
 	{
-		$quotes = QueryBuilder::for(Quote::with('user', 'likes', 'movie', 'comments', 'comments.user')->latest())
-			->allowedFilters('quote.en')
-			->paginate(10);
-
-		return QuoteResource::collection($quotes);
-		// return QuoteResource::collection(Quote::with('user', 'likes', 'movie', 'comments', 'comments.user')->latest()->paginate(10));
+		$locale = app()->getLocale();
+		return QuoteResource::collection(
+			QueryBuilder::for(Quote::class)
+				->allowedFilters([
+					AllowedFilter::callback('quote', function ($query, $value) use ($locale) {
+						$query->whereRaw('LOWER(JSON_UNQUOTE(JSON_EXTRACT(`quote`, \'$."' . $locale . '"\'))) like ?', ['%' . strtolower($value) . '%']);
+					}),
+					AllowedFilter::callback('movie.name', function ($query, $value) use ($locale) {
+						$query->whereHas('movie', function ($query) use ($locale, $value) {
+							$query->whereRaw('LOWER(JSON_UNQUOTE(JSON_EXTRACT(`name`, \'$."' . $locale . '"\'))) like ?', ['%' . strtolower($value) . '%']);
+						});
+					}),
+				])
+				->with('user', 'movie', 'likes', 'comments', 'comments.user')
+				->latest()
+				->paginate(10)
+		);
 	}
 
 	public function show(Quote $quote)
