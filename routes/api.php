@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerificationController;
@@ -15,7 +16,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 		Route::patch('/update-profile', 'update')->name('user.update');
 	});
 
-	Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
 	Route::controller(MovieController::class)->group(function () {
 		Route::get('/get-movies', 'index')->name('movie.index');
 		Route::get('/movies/{movie}', 'show')->name('movie.show');
@@ -33,6 +33,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 		Route::patch('/edit-quote/{quote}', 'update')->name('quote.update');
 		Route::delete('/delete-quote/{quote}', 'destroy')->name('quote.destroy');
 	});
+	Route::controller(NotificationController::class)->group(function () {
+		Route::get('/notifications', 'index')->name('notifications.index');
+		Route::post('/notifications/mark-as-read/{notification}', 'markNotification')->name('notifications.mark_as_read');
+		Route::post('/notifications/mark-all', 'markAllAsRead')->name('notifications.mark_all');
+	});
+
+	Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
 });
 
 Route::controller(AuthController::class)->group(function () {

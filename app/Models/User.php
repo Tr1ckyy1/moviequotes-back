@@ -68,6 +68,16 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
 		return $this->hasMany(Movie::class);
 	}
 
+	public function notificationsSent()
+	{
+		return $this->hasMany(Notification::class, 'user_id_from');
+	}
+
+	public function notificationsReceived()
+	{
+		return $this->hasMany(Notification::class, 'user_id_to');
+	}
+
 	public function sendPasswordResetNotification($token): void
 	{
 		$this->notify(new ResetPasswordNotification(config('app.frontend_url') . '?token=' . $token . '&email=' . $this->email));

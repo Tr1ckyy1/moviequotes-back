@@ -2,9 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\QuoteCommented;
+use App\Events\QuoteCommentNotification;
+use App\Events\QuoteLiked;
+use App\Events\QuoteLikeNotification;
 use App\Http\Requests\StoreQuoteRequest;
 use App\Http\Requests\StoreQuoteUpdateRequest;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\NotificationResource;
 use App\Http\Resources\QuoteResource;
+use App\Models\Notification;
 use App\Models\Quote;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -66,23 +73,38 @@ class QuoteController extends Controller
 
 	public function updateLike(Quote $quote)
 	{
-		$like = $quote->likes()->where('user_id', auth()->id())->first();
+		$likeExists = $quote->likes()->where('user_id', auth()->id())->first();
 
-		if ($like) {
-			$like->delete();
+		if ($likeExists) {
+			$likeExists->delete();
+			broadcast(new QuoteLiked(['like_id' => $likeExists->id, 'quote_id' => $quote->id]));
 		} else {
-			$quote->likes()->create([
+			$like = $quote->likes()->create([
 				'user_id' => auth()->id(),
 			]);
+			broadcast(new QuoteLiked(['quote_id' => $quote->id, 'like' => $like]));
+			if (auth()->id() !== $quote->user_id) {
+				$notification = Notification::create(['user_id_from' => auth()->id(), 'user_id_to'=>$quote->user_id, 'type' => 'like', 'quote_id' => $quote->id]);
+				broadcast(new QuoteLikeNotification(new NotificationResource($notification)));
+			}
 		}
 	}
 
 	public function addComment(Request $request, Quote $quote)
 	{
-		$quote->comments()->create([
+		$comment = $quote->comments()->create([
 			'user_id' => auth()->id(),
 			'comment' => $request->comment,
-		]);
+		])->load('user');
+
+		broadcast(new QuoteCommented([
+			'comment'  => new CommentResource($comment),
+			'quote_id' => $quote->id,
+		]));
+		if (auth()->id() !== $quote->user_id) {
+			$notification = Notification::create(['user_id_from' => auth()->id(), 'user_id_to' => $quote->user_id, 'type' => 'comment', 'quote_id' => $quote->id]);
+			broadcast(new QuoteCommentNotification(new NotificationResource($notification)));
+		}
 	}
 
 	public function destroy(Quote $quote)
