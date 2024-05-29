@@ -56,7 +56,6 @@ class MovieController extends Controller
 		$movie->update($request->validated());
 
 		if ($request->hasFile('image')) {
-			$movie->clearMediaCollection('movie_images');
 			$movie->addMediaFromRequest('image')->toMediaCollection('movie_images');
 		}
 
@@ -69,6 +68,9 @@ class MovieController extends Controller
 
 	public function destroy(Movie $movie)
 	{
+		if ($movie->user_id !== auth()->id()) {
+			return response()->json('Unauthorized', 403);
+		}
 		$movie->delete();
 	}
 }

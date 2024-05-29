@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -40,5 +42,13 @@ class UserFactory extends Factory
 		return $this->state(fn (array $attributes) => [
 			'email_verified_at' => null,
 		]);
+	}
+
+	public function withImage()
+	{
+		return $this->afterCreating(function (User $user) {
+			$user->addMedia(UploadedFile::fake()->image('user.jpg'))
+				  ->toMediaCollection('user_images');
+		});
 	}
 }

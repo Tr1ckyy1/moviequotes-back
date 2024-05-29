@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\ResetPasswordNotification;
+use App\Notifications\VerifyEmailNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -80,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
 
 	public function sendPasswordResetNotification($token): void
 	{
-		$this->notify(new ResetPasswordNotification(config('app.frontend_url') . '?token=' . $token . '&email=' . $this->email));
+		$this->notify((new ResetPasswordNotification(config('app.frontend_url') . '?token=' . $token . '&email=' . $this->email))->locale(app()->getLocale()));
 	}
 
 	public function getProfileImageUrl()
@@ -98,5 +99,10 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
 	{
 		$this->addMediaCollection('user_images')
 			 ->singleFile();
+	}
+
+	public function sendEmailVerificationNotification()
+	{
+		$this->notify((new VerifyEmailNotification())->locale(app()->getLocale()));
 	}
 }

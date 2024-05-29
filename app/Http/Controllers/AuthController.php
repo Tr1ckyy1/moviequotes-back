@@ -8,7 +8,6 @@ use App\Http\Requests\StoreResetPassword;
 use App\Http\Requests\StoreSignupRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -19,7 +18,7 @@ class AuthController extends Controller
 	public function signup(StoreSignupRequest $request)
 	{
 		$user = User::create($request->validated());
-		event(new Registered($user));
+		$user->sendEmailVerificationNotification();
 	}
 
 	public function login(StoreLoginRequest $request)
@@ -60,7 +59,7 @@ class AuthController extends Controller
 		$user = User::where('email', $request->email)->first();
 
 		if ($user->google_id) {
-			return response()->json(['errors' => ['email' => __('profile.gmail_password_error')]], 403);
+			return response()->json(['errors' => ['email' => __('profile.gmail_password_error')]], 422);
 		}
 		Password::sendResetLink(
 			$request->only('email')
