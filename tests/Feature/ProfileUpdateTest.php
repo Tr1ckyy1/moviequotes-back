@@ -9,7 +9,7 @@ beforeEach(function () {
 });
 
 test('should return error if user sends no data', function () {
-	$this->actingAs($this->user)->patchJson(route('user.update'))->assertStatus(403)->assertExactJson(['error' => __('profile.no_changes')]);
+	$this->actingAs($this->user)->patchJson(route('user.update'))->assertStatus(400)->assertExactJson(['error' => __('profile.no_changes')]);
 });
 
 test('should return error if username already exists', function () {

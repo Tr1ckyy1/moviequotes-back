@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreForgotPassword;
 use App\Http\Requests\StoreLoginRequest;
-use App\Http\Requests\StoreResetPassword;
+use App\Http\Requests\StoreResetPasswordRequest;
 use App\Http\Requests\StoreSignupRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
@@ -66,7 +66,7 @@ class AuthController extends Controller
 		);
 	}
 
-	public function resetPassword(StoreResetPassword $request)
+	public function resetPassword(StoreResetPasswordRequest $request)
 	{
 		$validatedData = $request->validated();
 
