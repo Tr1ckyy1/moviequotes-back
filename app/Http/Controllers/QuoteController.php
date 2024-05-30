@@ -26,11 +26,11 @@ class QuoteController extends Controller
 			QueryBuilder::for(Quote::class)
 				->allowedFilters([
 					AllowedFilter::callback('quote', function ($query, $value) use ($locale) {
-						$query->whereRaw('LOWER(JSON_UNQUOTE(JSON_EXTRACT(`quote`, \'$."' . $locale . '"\'))) like ?', ['%' . strtolower($value) . '%']);
+						$query->whereRaw('LOWER(JSON_EXTRACT(`quote`, \'$."' . "$locale" . '"\')) like ?', ['%' . strtolower($value) . '%']);
 					}),
 					AllowedFilter::callback('movie.name', function ($query, $value) use ($locale) {
 						$query->whereHas('movie', function ($query) use ($locale, $value) {
-							$query->whereRaw('LOWER(JSON_UNQUOTE(JSON_EXTRACT(`name`, \'$."' . $locale . '"\'))) like ?', ['%' . strtolower($value) . '%']);
+							$query->whereRaw('LOWER(JSON_EXTRACT(`name`, \'$."' . "$locale" . '"\')) like ?', ['%' . strtolower($value) . '%']);
 						});
 					}),
 				])

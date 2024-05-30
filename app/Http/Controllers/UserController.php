@@ -25,7 +25,7 @@ class UserController extends Controller
 			!isset($credentials['password']) &&
 			!isset($credentials['profile_image'])
 		) {
-			return response()->json(['error' => __('profile.no_changes')], 403);
+			return response()->json(['error' => __('profile.no_changes')], 400);
 		}
 
 		if (isset($credentials['password'])) {
