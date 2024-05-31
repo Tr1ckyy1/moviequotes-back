@@ -19,10 +19,6 @@
             padding:2rem;
         }
 
-        .desktop-logo{
-            display:none;
-        }
-
         .img-container{
             margin:0 auto;
             width:fit-content;
@@ -69,12 +65,6 @@
             .main-container{
                 padding:6rem 12rem;
             }   
-            .mobile-logo{
-                display:none;
-            }
-            .desktop-logo{
-                display:block;
-            }
         }
     </style>
 </head>
@@ -82,8 +72,7 @@
 <span style="opacity: 0"> {{ now() }} </span>
     <div class="main-container">
         <div class="img-container">
-            <img class="desktop-logo" src="{{asset('desktop-logo.png')}}"/>
-            <img class="mobile-logo" src="{{asset('mobile-logo.png')}}"/>
+            <img src="{{asset('logo.png')}}"/>
         </div>
         <div class="content-container">
             <p>{{__('email-verification.hello')}} {{$user}}!</p>
