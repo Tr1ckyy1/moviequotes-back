@@ -15,6 +15,7 @@
             width: 100%;
             height:auto;
             min-height:100vh;
+            background:#15131F;
             background: linear-gradient(to bottom, #181623 0%, #191725 50%, #0D0B14 100%);
             padding:2rem;
         }
@@ -22,8 +23,7 @@
         .img-container{
             margin:0 auto;
             width:fit-content;
-        }
-     
+        }     
 
         .content-container{
             margin:2rem auto;
