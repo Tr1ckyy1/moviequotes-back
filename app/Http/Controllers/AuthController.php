@@ -39,9 +39,11 @@ class AuthController extends Controller
 			return response()->json(['errors' =>['user' =>  __('auth.user_is_not_verified_error_message')]], 422);
 		}
 
+		$loginField = filter_var($credentials['user'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
 		if (!Auth::attempt(
 			[
-				'username'          => $credentials['user'],
+				$loginField         => $credentials['user'],
 				'password'          => $credentials['password'],
 			],
 			$credentials['remember_token'] ?? null
