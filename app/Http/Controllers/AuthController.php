@@ -9,6 +9,7 @@ use App\Http\Requests\StoreSignupRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -25,23 +26,29 @@ class AuthController extends Controller
 	{
 		$credentials = $request->validated();
 
-		$user = User::where('email', $credentials['email'])->first();
+		$user = User::where('username', $credentials['user'])->orWhere('email', $credentials['user'])->first();
+
+		if (!$user) {
+			return response()->json(['errors' => ['user' => __('validation.user_or_email_doesnt_exist')]], 422);
+		}
 		if ($user->google_id) {
-			return response()->json(['errors' => ['email' => __('auth.google_login_error_message')]], 422);
+			return response()->json(['errors' => ['user' => __('auth.google_login_error_message')]], 422);
 		}
 
 		if (!$user->email_verified_at) {
-			return response()->json(['errors' =>['email' =>  __('auth.user_is_not_verified_error_message')]], 422);
+			return response()->json(['errors' =>['user' =>  __('auth.user_is_not_verified_error_message')]], 422);
 		}
+
+		$loginField = filter_var($credentials['user'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
 		if (!Auth::attempt(
 			[
-				'email'          => $credentials['email'],
-				'password'       => $credentials['password'],
+				$loginField         => $credentials['user'],
+				'password'          => $credentials['password'],
 			],
 			$credentials['remember_token'] ?? null
 		)) {
-			return response()->json(['errors' =>['email' =>  __('auth.auth_login_credentials_dont_match')]], 422);
+			return response()->json(['errors' =>['user' =>  __('auth.auth_login_credentials_dont_match')]], 422);
 		}
 
 		session()->regenerate();
@@ -100,7 +107,7 @@ class AuthController extends Controller
 
 	public function checkTokenValidity()
 	{
-		$user = User::where('email', request()->email)->first();
+		$user = User::where('email', Crypt::decryptString(request()->email))->first();
 		if (!$user) {
 			return response()->json(['User not found'], 404);
 		}

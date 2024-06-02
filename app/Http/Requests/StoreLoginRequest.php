@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreLoginRequest extends FormRequest
 {
@@ -15,7 +14,7 @@ class StoreLoginRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'email'          => ['required', 'email', Rule::exists('users', 'email')],
+			'user'           => ['required', 'min:3'],
 			'password'       => ['required'],
 			'remember_token' => '',
 		];
@@ -24,11 +23,7 @@ class StoreLoginRequest extends FormRequest
 	public function messages()
 	{
 		return [
-			'email' => [
-				'required'                  => __('validation.auth.email.required'),
-				'email'                     => __('validation.auth.email.valid_email'),
-				'exists'                    => __('validation.auth.email.exists'),
-			],
+			'user'              => ['required' => __('validation.required_all'), 'min' => __('validation.auth.username.min')],
 			'password.required' => __('validation.auth.password.required'),
 		];
 	}

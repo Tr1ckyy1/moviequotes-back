@@ -49,7 +49,6 @@ class VerifyEmailNotification extends Notification implements ShouldQueue
 			'hash'      => sha1($notifiable->getEmailForVerification()),
 			'expires'   => $expires,
 			'signature' => $signature,
-			'email'     => $notifiable->email,
 		]);
 	}
 

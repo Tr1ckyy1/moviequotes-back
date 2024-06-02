@@ -48,10 +48,12 @@ return [
 		],
 		'quote' => [
 			'required' => 'Quote is required',
-			'movie' => 'Please choose a movie'
+			'movie'    => 'Please choose a movie',
 		],
 		'image' => [
 			'required' => 'Image is required',
 		],
 	],
+	'required_all'               => 'This field is required',
+	'user_or_email_doesnt_exist' => 'No such user exists',
 ];

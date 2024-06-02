@@ -3,15 +3,20 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Validation\Rule;
 
 class StoreResetPasswordRequest extends FormRequest
 {
-	/**
-	 * Get the validation rules that apply to the request.
-	 *
-	 * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-	 */
+	protected function prepareForValidation()
+	{
+		if ($this->has('email')) {
+			$this->merge([
+				'email' => Crypt::decryptString($this->input('email')),
+			]);
+		}
+	}
+
 	public function rules(): array
 	{
 		return [
