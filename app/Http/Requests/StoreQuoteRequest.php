@@ -9,8 +9,8 @@ class StoreQuoteRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'quote.en'        => ['required', 'regex:/^[A-Za-z0-9\s.,:;\'"`?!-]+$/'],
-			'quote.ka'        => ['required', 'regex:/^[\x{10A0}-\x{10FF}0-9\s.,:;\'"`?!-]+$/u'],
+			'quote.en'        => ['required', 'regex:/^[A-Za-z0-9\s.,:;\'"`?!()-]+$/'],
+			'quote.ka'        => ['required', 'regex:/^[\x{10A0}-\x{10FF}0-9\s.,:;\'"`?!()-]+$/u'],
 			'image'           => ['required', 'image', 'max:2048'],
 		];
 	}
