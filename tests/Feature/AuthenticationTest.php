@@ -6,6 +6,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Crypt;
 
 test('signup should have error if inputs are empty', function () {
 	$this->postJson(route('auth.signup'))->assertJsonValidationErrors(['username' => 'required', 'email' => 'required', 'password' =>'required', 'password_confirmation' => 'required'])->assertStatus(422);
@@ -53,22 +54,22 @@ test('signup should return error if authorized user is trying to sign up', funct
 });
 
 test('login should have error if email does not exist in database', function () {
-	$this->postJson(route('auth.login'), ['email' => 'abcdefghijklmnop@aa'])->assertJsonValidationErrors(['email' => __('validation.auth.email.exists')])->assertStatus(422);
+	$this->postJson(route('auth.login'), ['user' => 'abcdefghijklmnop@aa', 'password' => 'password'])->assertJsonValidationErrors(['user' => __('validation.user_or_email_doesnt_exist')])->assertStatus(422);
 });
 
 test('login should have error if credentials dont match the existing user credentials', function () {
 	User::factory()->create(['email' => 'test@gmail.com', 'password' => 'password1']);
-	$this->postJson(route('auth.login'), ['email' => 'test@gmail.com', 'password' => 'password2'])->assertJsonValidationErrors(['email' => __('auth.auth_login_credentials_dont_match')])->assertStatus(422);
+	$this->postJson(route('auth.login'), ['user' => 'test@gmail.com', 'password' => 'password2'])->assertJsonValidationErrors(['user' => __('auth.auth_login_credentials_dont_match')])->assertStatus(422);
 });
 
 test('login should have error if user has not verified email', function () {
 	User::factory()->create(['email' => 'test@gmail.com', 'password' => 'password1', 'email_verified_at' => null]);
-	$this->postJson(route('auth.login'), ['email' => 'test@gmail.com', 'password' => 'password'])->assertJsonValidationErrors(['email' => __('auth.user_is_not_verified_error_message')])->assertStatus(422);
+	$this->postJson(route('auth.login'), ['user' => 'test@gmail.com', 'password' => 'password'])->assertJsonValidationErrors(['user' => __('auth.user_is_not_verified_error_message')])->assertStatus(422);
 });
 
 test('user able to login successfully with provided credentials', function () {
 	User::factory()->create(['email' => 'test@gmail.com', 'password' => 'password']);
-	$this->postJson(route('auth.login'), ['email' => 'test@gmail.com', 'password'=>'password'])->assertStatus(200);
+	$this->postJson(route('auth.login'), ['user' => 'test@gmail.com', 'password'=>'password'])->assertStatus(200);
 });
 
 test('user able to logout successfully', function () {
@@ -99,7 +100,7 @@ test('user can reset password with valid token', function () {
 	$token = Password::createToken($user);
 
 	$response = $this->postJson(route('auth.reset_password'), [
-		'email'                 => 'test@gmail.com',
+		'email'                 => Crypt::encryptString('test@gmail.com'),
 		'token'                 => $token,
 		'password'              => 'newpassword123',
 		'password_confirmation' => 'newpassword123',
@@ -121,7 +122,7 @@ test('reset password should return error if new password is same as old one', fu
 	$token = Password::createToken($user);
 
 	$response = $this->postJson(route('auth.reset_password'), [
-		'email'                 => 'test@gmail.com',
+		'email'                 => Crypt::encryptString('test@gmail.com'),
 		'token'                 => $token,
 		'password'              => 'password123',
 		'password_confirmation' => 'password123',
@@ -143,7 +144,7 @@ test('reset password should return error if invalid token is being sent', functi
 	$token = Password::createToken($user);
 
 	$response = $this->postJson(route('auth.reset_password'), [
-		'email'                 => 'test@gmail.com',
+		'email'                 => Crypt::encryptString('test@gmail.com'),
 		'token'                 => $token . '1',
 		'password'              => 'newpassword123',
 		'password_confirmation' => 'newpassword123',
@@ -167,7 +168,7 @@ test('reset password should return error for expired token', function () {
 	Carbon::setTestNow(Carbon::now()->addMinutes(config('auth.passwords.users.expire') + 1));
 
 	$response = $this->postJson(route('auth.reset_password'), [
-		'email'                 => 'test@gmail.com',
+		'email'                 => Crypt::encryptString('test@gmail.com'),
 		'token'                 => $token,
 		'password'              => 'newpassword123',
 		'password_confirmation' => 'newpassword123',
