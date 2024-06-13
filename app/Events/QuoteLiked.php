@@ -29,7 +29,6 @@ class QuoteLiked implements ShouldBroadcast
 	 */
 	public function broadcastOn(): array
 	{
-		return [new Channel('quotes'),
-		];
+		return [new Channel('quotes')];
 	}
 }

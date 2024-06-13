@@ -10,7 +10,7 @@ class StoreForgotPassword extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'email'          => ['required', 'email', Rule::exists('users', 'email')],
+			'email' => ['required', 'email', Rule::exists('users', 'email')],
 		];
 	}
 
@@ -18,9 +18,9 @@ class StoreForgotPassword extends FormRequest
 	{
 		return [
 			'email' => [
-				'required'                  => __('validation.auth.email.required'),
-				'email'                     => __('validation.auth.email.valid_email'),
-				'exists'                    => __('validation.auth.email.exists'),
+				'required' => __('validation.auth.email.required'),
+				'email'    => __('validation.auth.email.valid_email'),
+				'exists'   => __('validation.auth.email.exists'),
 			],
 		];
 	}

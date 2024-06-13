@@ -14,8 +14,8 @@ class Category extends Model
 
 	public $translatable = ['name'];
 
-    public function movies()
-    {
-        return $this->belongsToMany(Movie::class);
-    }
+	public function movies()
+	{
+		return $this->belongsToMany(Movie::class);
+	}
 }

@@ -12,7 +12,6 @@ class QuoteCommented implements ShouldBroadcast
 {
 	use Dispatchable, InteractsWithSockets, SerializesModels;
 
-	// public $userId;
 	public $data;
 
 	/**

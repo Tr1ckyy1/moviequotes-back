@@ -16,13 +16,13 @@ class MovieIndexResource extends JsonResource
 	{
 		return [
 			'id'                  => $this->id,
-            'name'   => [
-                'en' => $this->getTranslation('name', 'en'),
-                'ka' => $this->getTranslation('name', 'ka'),
-            ],
+			'name'                => [
+				'en' => $this->getTranslation('name', 'en'),
+				'ka' => $this->getTranslation('name', 'ka'),
+			],
 			'year'                => $this->year,
 			'quotes'              => $this->quotes->count(),
-            'image' => $this->getImage()
+			'image'               => $this->getImage(),
 		];
 	}
 }
